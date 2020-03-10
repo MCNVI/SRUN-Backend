@@ -19,7 +19,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ippo
+      POSTGRES_PASSWORD: ippo
+      POSTGRES_DB: ippo
 
 volumes:
   data: {}

@@ -1,0 +1,12 @@
+server:
+  port: 8070
+
+spring:
+  mvc:
+    servlet:
+      path: /api
+  datasource:
+    url: jdbc:postgresql://db:5432/ippo
+    username: ippo
+    password: ippo
+    driver-class-name: org.postgresql.Driver
