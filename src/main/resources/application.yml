@@ -10,3 +10,5 @@ spring:
     username: ippo
     password: ippo
     driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-on-migrate: true
