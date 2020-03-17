@@ -1,9 +1,9 @@
 package ru.mirea.ippo.backend.controllers
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import ru.mirea.ippo.backend.entities.DbLecturerType
+import ru.mirea.ippo.backend.models.LecturerType
+import ru.mirea.ippo.backend.models.LecturerTypeTemplate
 import ru.mirea.ippo.backend.services.DirectoryService
 
 @RestController
@@ -11,8 +11,13 @@ import ru.mirea.ippo.backend.services.DirectoryService
 class DirectoryController(val directoryService: DirectoryService) {
 
     @GetMapping("/lecturerTypes")
-    fun getLecturerTypes(): List<DbLecturerType>{
+    fun getLecturerTypes(): List<LecturerType>{
         return directoryService.getLecturerTypes()
+    }
+
+    @PostMapping("/lecturerTypes")
+    fun updatreLecturerTypes(@RequestBody types: List<LecturerTypeTemplate>): List<LecturerType>{
+        return directoryService.updateLecturerTypes(types)
     }
 
 }
