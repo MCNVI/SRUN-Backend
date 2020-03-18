@@ -1,7 +1,6 @@
 package ru.mirea.ippo.backend.controllers
 
 import org.springframework.web.bind.annotation.*
-import ru.mirea.ippo.backend.entities.DbLecturerType
 import ru.mirea.ippo.backend.models.LecturerType
 import ru.mirea.ippo.backend.models.LecturerTypeTemplate
 import ru.mirea.ippo.backend.services.DirectoryService

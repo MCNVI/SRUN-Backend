@@ -20,7 +20,7 @@ create table ippo.staffing_table
     last_name                   varchar        not null,
     lecturer_rate               decimal(19, 5) not null,
     lecturer_hours_for_rate     decimal(19, 5) not null,
-    lecturer_max_hours_for_rate decimal(19, 5) not null,
+    lecturer_max_hours_for_rate decimal(19, 5) not null default 900,
     constraint pk_staffing_table primary key (id),
     constraint fk_staffing_table_lecturer_type
         foreign key (lecturer_type_id)

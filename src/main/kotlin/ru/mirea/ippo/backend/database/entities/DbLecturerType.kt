@@ -1,4 +1,4 @@
-package ru.mirea.ippo.backend.entities
+package ru.mirea.ippo.backend.database.entities
 
 import org.hibernate.annotations.GenericGenerator
 import ru.mirea.ippo.backend.models.LecturerType
@@ -13,28 +13,42 @@ import javax.persistence.Table
 @Table(name = "lecturer_type", schema = "ippo")
 data class DbLecturerType(
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    val id: UUID?,
+    override val id: UUID,
     val type: String,
     val hours: Int,
     val isPartTime: Boolean,
     val isExternal: Boolean
-) {
+) : Identified<UUID> {
     fun toModel(): LecturerType = LecturerType(
-        id!!,
+        id,
         type,
         hours,
         isPartTime,
         isExternal
     )
+}
+
+@Entity
+@Table(name = "lecturer_type", schema = "ippo")
+data class DbInsertableLecturerType (
+    @Id
+    override val id: UUID?,
+    val type: String,
+    val hours: Int,
+    val isPartTime: Boolean,
+    val isExternal: Boolean
+) : Insertable<DbInsertableLecturerType,UUID> {
     companion object{
-        fun fromTemplate(type: LecturerTypeTemplate) = DbLecturerType(
+        fun fromTemplate(type: LecturerTypeTemplate) = DbInsertableLecturerType(
             type.id,
             type.type,
             type.hours,
             type.isPartTime,
             type.isExternal ?: false
         )
+    }
+
+    override fun clone(): DbInsertableLecturerType {
+        return this.copy()
     }
 }
