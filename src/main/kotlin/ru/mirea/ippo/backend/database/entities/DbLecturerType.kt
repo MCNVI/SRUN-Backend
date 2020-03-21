@@ -1,11 +1,9 @@
 package ru.mirea.ippo.backend.database.entities
 
-import org.hibernate.annotations.GenericGenerator
 import ru.mirea.ippo.backend.models.LecturerType
 import ru.mirea.ippo.backend.models.LecturerTypeTemplate
 import java.util.*
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.Table
 
