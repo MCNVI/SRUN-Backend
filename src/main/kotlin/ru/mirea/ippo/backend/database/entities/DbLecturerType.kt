@@ -11,42 +11,26 @@ import javax.persistence.Table
 @Table(name = "lecturer_type", schema = "ippo")
 data class DbLecturerType(
     @Id
-    override val id: UUID,
+    val id: UUID,
     val type: String,
-    val hours: Int,
+    val studyLoad: Int,
     val isPartTime: Boolean,
     val isExternal: Boolean
-) : Identified<UUID> {
+) {
     fun toModel(): LecturerType = LecturerType(
         id,
         type,
-        hours,
+        studyLoad,
         isPartTime,
         isExternal
     )
-}
-
-@Entity
-@Table(name = "lecturer_type", schema = "ippo")
-data class DbInsertableLecturerType (
-    @Id
-    override val id: UUID?,
-    val type: String,
-    val hours: Int,
-    val isPartTime: Boolean,
-    val isExternal: Boolean
-) : Insertable<DbInsertableLecturerType,UUID> {
     companion object{
-        fun fromTemplate(type: LecturerTypeTemplate) = DbInsertableLecturerType(
-            type.id,
+        fun fromTemplate(type: LecturerTypeTemplate) = DbLecturerType(
+            type.id ?: UUID.randomUUID(),
             type.type,
-            type.hours,
+            type.studyLoad,
             type.isPartTime,
             type.isExternal ?: false
         )
-    }
-
-    override fun clone(): DbInsertableLecturerType {
-        return this.copy()
     }
 }

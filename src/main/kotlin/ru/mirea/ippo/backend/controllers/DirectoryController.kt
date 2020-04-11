@@ -8,6 +8,7 @@ import java.util.*
 
 @RestController
 @RequestMapping("directory")
+@CrossOrigin
 class DirectoryController(val directoryService: DirectoryService) {
 
     @GetMapping("lecturerTypes")
@@ -21,8 +22,8 @@ class DirectoryController(val directoryService: DirectoryService) {
     }
 
     @DeleteMapping("lecturerTypes/{id}")
-    fun deleteLecturerType(@PathVariable id: UUID): List<LecturerType> {
-        return directoryService.deleteLecturerType(id)
+    fun deleteLecturerType(@PathVariable id: UUID) {
+        directoryService.deleteLecturerType(id)
     }
 
 

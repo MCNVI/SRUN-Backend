@@ -9,19 +9,20 @@ import java.util.*
 
 @RestController
 @RequestMapping("lecturers")
+@CrossOrigin
 class LecturersController(val lecturerService: LecturerService) {
 
     @PostMapping
-    fun createLecturer(@RequestBody lecturerTemplate: LecturerTemplate): Lecturer = lecturerService.create(lecturerTemplate)
+    fun createOrUpdateLecturer(@RequestBody lecturerTemplate: LecturerTemplate): Lecturer {
+        val lecturer = lecturerService.createOrUpdate(lecturerTemplate)
+        return lecturerService.find(lecturer.id)
+    }
 
     @GetMapping
     fun getLecturers(): List<Lecturer> = lecturerService.findAll()
 
     @GetMapping("{id}")
     fun getLecturerById(@PathVariable id: UUID): Lecturer = lecturerService.find(id)
-
-    @PutMapping("{id}")
-    fun updateLecturer(@PathVariable id: UUID,@RequestBody lecturerTemplate: LecturerTemplate): Lecturer = lecturerService.update(id,lecturerTemplate)
 
     @DeleteMapping("{id}")
     fun deleteLecturer(@PathVariable id: UUID) = lecturerService.delete(id)

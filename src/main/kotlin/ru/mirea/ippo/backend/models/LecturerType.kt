@@ -5,7 +5,7 @@ import java.util.*
 data class LecturerType(
     val id: UUID,
     val type: String,
-    val hours: Int,
+    val studyLoad: Int,
     val isPartTime: Boolean,
     val isExternal: Boolean
 )
@@ -13,7 +13,7 @@ data class LecturerType(
 data class LecturerTypeTemplate(
     val id: UUID?,
     val type: String,
-    val hours: Int,
+    val studyLoad: Int,
     val isPartTime: Boolean,
     val isExternal: Boolean?
 )

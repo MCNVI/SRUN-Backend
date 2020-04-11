@@ -12,3 +12,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   flyway:
     baseline-on-migrate: true
+
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    or.hibernate.type: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
