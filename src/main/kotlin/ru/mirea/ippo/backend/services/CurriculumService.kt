@@ -264,4 +264,7 @@ class CurriculumService(
 
     }
 
+    fun delete(curriculumId: UUID) {
+        curriculumShortRepository.deleteById(curriculumId)
+    }
 }

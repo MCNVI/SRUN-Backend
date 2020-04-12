@@ -31,7 +31,9 @@ class CurriculumController(val curriculumService: CurriculumService) {
         curriculum.delete()
     }
 
-
+    @DeleteMapping("{id}")
+    fun deleteCurriculum(@PathVariable id: UUID) =
+        curriculumService.delete(id)
 
 
 }
