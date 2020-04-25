@@ -4,6 +4,7 @@ import com.sun.xml.bind.v2.TODO
 import org.springframework.web.bind.annotation.*
 import ru.mirea.ippo.backend.models.Lecturer
 import ru.mirea.ippo.backend.models.LecturerTemplate
+import ru.mirea.ippo.backend.models.PrioritizedLecturer
 import ru.mirea.ippo.backend.services.LecturerService
 import java.util.*
 
@@ -20,6 +21,9 @@ class LecturersController(val lecturerService: LecturerService) {
 
     @GetMapping
     fun getLecturers(): List<Lecturer> = lecturerService.findAll()
+
+    @GetMapping
+    fun getLecturersByRelevace(@RequestParam loadUnitId: UUID): List<PrioritizedLecturer> = lecturerService.getByRelevance(loadUnitId)
 
     @GetMapping("{id}")
     fun getLecturerById(@PathVariable id: UUID): Lecturer = lecturerService.find(id)

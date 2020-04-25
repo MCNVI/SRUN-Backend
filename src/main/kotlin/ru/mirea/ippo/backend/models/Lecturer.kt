@@ -30,3 +30,17 @@ data class LecturerTemplate(
     val employmentFinishDate: Instant,
     val monthAmount: BigDecimal
 )
+
+data class PrioritizedLecturer(
+    val id: UUID,
+    val lecturerType: LecturerType?,
+    val name: String,
+    val middleName: String,
+    val lastName: String,
+    val lecturerRate: BigDecimal,
+    val lecturerLoadForRate: BigDecimal,
+    val lecturerMaxLoadForRate: BigDecimal,
+    val employmentStartDate: Instant,
+    val employmentFinishDate: Instant,
+    val monthAmount: BigDecimal
+)

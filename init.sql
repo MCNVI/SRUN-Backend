@@ -66,13 +66,13 @@ create table ippo.curriculum
 
 create table ippo.curriculum_unit
 (
-    id                  uuid    not null,
-    course              integer not null,
-    semester            integer not null,
-    subject             varchar not null,
-    load                decimal(19, 5),
-    load_type           varchar not null,
-    curriculum_id       uuid    not null,
+    id            uuid    not null,
+    course        integer not null,
+    semester      integer not null,
+    subject       varchar not null,
+    load          decimal(19, 5),
+    load_type     varchar not null,
+    curriculum_id uuid    not null,
 
     constraint pk_curriculum_unit primary key (id),
     constraint fk_curriculum_load_type
@@ -89,10 +89,10 @@ create table ippo.curriculum_unit
 
 create table ippo.group
 (
-    code                varchar not null,
-    students_number     integer not null,
-    curriculum_id       uuid    not null,
-    course              integer not null,
+    code            varchar not null,
+    students_number integer not null,
+    curriculum_id   uuid    not null,
+    course          integer not null,
 
     constraint pk_group primary key (code),
     constraint fk_group_curriculum
@@ -106,11 +106,11 @@ create table ippo.group
 
 create table ippo.stream
 (
-    id                  uuid    not null,
-    type                varchar not null,
-    subject             varchar not null,
-    course              integer not null,
-    curriculum_id       uuid    not null,
+    id            uuid    not null,
+    type          varchar not null,
+    subject       varchar not null,
+    course        integer not null,
+    curriculum_id uuid    not null,
 
     constraint pk_stream primary key (id),
     constraint fk_stream_curriculum
@@ -251,12 +251,38 @@ CREATE TRIGGER t_stream
     FOR EACH ROW
 EXECUTE PROCEDURE update_hours_due_to_streams();
 
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('LECTURE', 'BY_STREAM', null);
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('PRACTICAL_CLASS', 'BY_GROUP', null);
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('LABORATORY_WORK', 'BY_GROUP', null);
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('EXAM', 'BY_STUDENT', 0.35000);
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('TEST', 'BY_STUDENT', 0.25000);
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('COURSEWORK', 'BY_STUDENT', 2.00000);
-INSERT INTO ippo.load_type (type, division_type, type_load) VALUES ('COURSE_PROJECT', 'BY_STUDENT', 3.00000);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('LECTURE', 'BY_STREAM', null);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('PRACTICAL_CLASS', 'BY_GROUP', null);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('LABORATORY_WORK', 'BY_GROUP', null);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('EXAM', 'BY_STUDENT', 0.35000);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('TEST', 'BY_STUDENT', 0.25000);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('COURSEWORK', 'BY_STUDENT', 2.00000);
+INSERT INTO ippo.load_type (type, division_type, type_load)
+VALUES ('COURSE_PROJECT', 'BY_STUDENT', 3.00000);
+
+create table ippo.load_distribution
+(
+    id           uuid           not null,
+    load_unit_id uuid           not null,
+    lecturer_id  uuid           not null,
+    load_part    decimal(19, 5) not null,
 
 
+    constraint pk_load_distribution primary key (id),
+    constraint fk_load_distribution_load_unit
+        foreign key (load_unit_id)
+            references ippo.load (id)
+            on delete cascade
+            on update cascade,
+    constraint fk_load_distribution_lecturer
+        foreign key (lecturer_id)
+            references ippo.staffing_table (id)
+            on delete cascade
+            on update cascade
+);

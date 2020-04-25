@@ -1,6 +1,5 @@
 package ru.mirea.ippo.backend.services
 
-import io.ebean.annotation.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import ru.mirea.ippo.backend.database.entities.DbLecturerType

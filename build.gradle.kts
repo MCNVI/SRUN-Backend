@@ -7,9 +7,6 @@ plugins {
     kotlin("jvm") version "1.3.61"
     kotlin("plugin.spring") version "1.3.61"
     kotlin("plugin.jpa") version "1.3.61"
-    id("io.ebean") version "12.1.9"
-    kotlin("kapt") version "1.3.61"
-
 }
 
 group = "ru.mirea.ippo.backend"
@@ -41,10 +38,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:6.1.4")
-    implementation("io.ebean:ebean:12.1.9")
-    implementation("io.ebean:ebean-querybean:12.1.9")
-    kapt("io.ebean:kotlin-querybean-generator:12.1.9")
-    testImplementation("io.ebean:ebean-test:12.1.9")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
@@ -52,10 +45,15 @@ dependencies {
     compile("io.springfox:springfox-swagger2:2.9.2")
     compile("io.springfox:springfox-swagger-ui:2.9.2")
     compile("org.apache.poi:poi-ooxml:4.1.2")
-//    compile("org.hibernate:hibernate-core:5.4.13.Final")
+
+    testCompile("org.jetbrains.kotlin:kotlin-test")
+    testCompile("org.jetbrains.kotlin:kotlin-test-junit")
+    testCompile("org.mockito:mockito-junit-jupiter:2.23.0")
+    testCompile("org.mockito:mockito-core:2.21.0")
+    testCompile("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 }
 
-tasks.withType<Test> {
+tasks.test {
     useJUnitPlatform()
 }
 

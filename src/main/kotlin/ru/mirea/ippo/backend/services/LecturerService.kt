@@ -6,20 +6,27 @@ import ru.mirea.ippo.backend.database.entities.DbLecturer
 import ru.mirea.ippo.backend.errorhandling.ObjectNotFoundException
 import ru.mirea.ippo.backend.models.Lecturer
 import ru.mirea.ippo.backend.models.LecturerTemplate
+import ru.mirea.ippo.backend.models.PrioritizedLecturer
 import ru.mirea.ippo.backend.repositories.DirectoryRepository
 import ru.mirea.ippo.backend.repositories.LecturerRepository
+import ru.mirea.ippo.backend.repositories.LoadRepository
 import java.math.BigDecimal
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
-class LecturerService(val lecturerRepository: LecturerRepository, val directoryRepository: DirectoryRepository) {
+class LecturerService(val lecturerRepository: LecturerRepository, val directoryRepository: DirectoryRepository, val loadRepository: LoadRepository) {
 
     fun find(id: UUID): Lecturer =
         lecturerRepository.findByIdOrNull(id)?.toModel() ?: throw ObjectNotFoundException("Lecturer", id)
 
     fun findAll(): List<Lecturer> = lecturerRepository.findAll().map { it.toModel() }
+
+    fun getByRelevance(loadUnitId: UUID): List<PrioritizedLecturer> {
+        val loadUnit = loadRepository.findByIdOrNull(loadUnitId)?.toModel() ?: throw ObjectNotFoundException("LoadUnit", loadUnitId)
+        
+    }
 
     fun createOrUpdate(lecturerTemplate: LecturerTemplate): Lecturer {
         val lecturerType = directoryRepository.findByIdOrNull(lecturerTemplate.lecturerTypeId)
