@@ -129,12 +129,15 @@ create table ippo.group_stream
 
 create table ippo.load
 (
-    id         uuid           not null,
-    subject    varchar        not null,
-    group_code varchar,
-    stream_id  uuid,
-    hours_type varchar        not null,
-    hours      decimal(19, 5) not null,
+    id            uuid           not null,
+    course        integer        not null,
+    semester      integer        not null,
+    subject       varchar        not null,
+    group_code    varchar,
+    stream_id     uuid,
+    hours_type    varchar        not null,
+    hours         decimal(19, 5) not null,
+    curriculum_id uuid           not null,
 
     constraint pk_hours primary key (id)
 );
@@ -145,18 +148,20 @@ as
 $$
 declare
     course_t            integer;
+    semester_t          integer;
     subject_t           varchar;
     load_t              decimal(19, 5);
     load_type_t         varchar;
     division_type_t     varchar;
     type_hours_tmp      decimal(19, 5);
     students_number_tmp integer;
+    curriculum_t        uuid;
 begin
     if TG_OP = 'INSERT' then
-        for course_t,subject_t,load_t,load_type_t in select course, subject, load, load_type
-                                                     from ippo.curriculum_unit
-                                                     where curriculum_id = new.curriculum_id
-                                                       and course = new.course
+        for course_t,semester_t,subject_t,load_t,load_type_t,curriculum_t in select course, semester, subject, load, load_type, curriculum_id
+                                                                             from ippo.curriculum_unit
+                                                                             where curriculum_id = new.curriculum_id
+                                                                               and course = new.course
             loop
                 select division_type, type_load
                 into division_type_t, type_hours_tmp
@@ -164,13 +169,14 @@ begin
                 where type = load_type_t;
                 if division_type_t = 'BY_GROUP' then
                     insert into ippo.load
-                    values (uuid_generate_v4(), subject_t, new.code, null, load_type_t, load_t);
+                    values (uuid_generate_v4(), course_t, semester_t, subject_t, new.code, null, load_type_t, load_t,
+                            curriculum_t);
                 end if;
                 if division_type_t = 'BY_STUDENT' then
                     select students_number into students_number_tmp from ippo.group where code = new.code;
                     insert into ippo.load
-                    values (uuid_generate_v4(), subject_t, new.code, null, load_type_t,
-                            students_number_tmp * type_hours_tmp);
+                    values (uuid_generate_v4(), course_t, semester_t, subject_t, new.code, null, load_type_t,
+                            students_number_tmp * type_hours_tmp, curriculum_t);
                 end if;
             end loop;
         return new;
@@ -213,13 +219,15 @@ declare
     load_type_t     varchar;
     division_type_t varchar;
     type_hours_tmp  decimal(19, 5);
+    curriculum_t    uuid;
+    semester_t      integer;
 begin
     if TG_OP = 'INSERT' then
-        for course_t,subject_t,load_t,load_type_t in select course, subject, load, load_type
-                                                     from curriculum_unit
-                                                     where curriculum_id = new.curriculum_id
-                                                       and subject = new.subject
-                                                       and course = new.course
+        for course_t,semester_t,subject_t,load_t,load_type_t, curriculum_t in select course, semester, subject, load, load_type, curriculum_id
+                                                                              from curriculum_unit
+                                                                              where curriculum_id = new.curriculum_id
+                                                                                and subject = new.subject
+                                                                                and course = new.course
             loop
                 select division_type, type_load
                 into division_type_t, type_hours_tmp
@@ -227,7 +235,8 @@ begin
                 where type = load_type_t;
                 if division_type_t = 'BY_STREAM' then
                     insert into ippo.load
-                    values (uuid_generate_v4(), subject_t, null, new.id, load_type_t, load_t);
+                    values (uuid_generate_v4(), course_t, semester_t, subject_t, null, new.id, load_type_t, load_t,
+                            curriculum_t);
                 end if;
             end loop;
         return new;
@@ -286,3 +295,20 @@ create table ippo.load_distribution
             on delete cascade
             on update cascade
 );
+
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97550968775e', 'Профессор', 720, false, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97551968775e', 'Доцент', 810, false, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97552968775e', 'Старший преподаватель', 880, false, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97553968775e', 'Ассистент', 880, false, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97554968775e', 'Заведующий кафедрой', 640, false, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97555968775e', 'Ассистент', 880, true, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97556968775e', 'Доцент', 810, true, false);
+INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
+VALUES ('474be1bf-b35d-424e-b841-97557968775e', 'Профессор', 720, true, false);

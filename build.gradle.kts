@@ -45,6 +45,8 @@ dependencies {
     compile("io.springfox:springfox-swagger2:2.9.2")
     compile("io.springfox:springfox-swagger-ui:2.9.2")
     compile("org.apache.poi:poi-ooxml:4.1.2")
+    compile("org.jxls:jxls:2.8.1")
+    compile("org.jxls:jxls-poi:2.8.1")
 
     testCompile("org.jetbrains.kotlin:kotlin-test")
     testCompile("org.jetbrains.kotlin:kotlin-test-junit")

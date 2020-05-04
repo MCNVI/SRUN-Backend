@@ -16,7 +16,23 @@ data class Lecturer(
     val employmentStartDate: Instant,
     val employmentFinishDate: Instant,
     val monthAmount: BigDecimal
-)
+) {
+    fun getFio(): String{
+        return "$lastName $name $middleName"
+    }
+    fun getForm(): String{
+        if (lecturerType == null){
+            return "Неизвестная формы устройства"
+        }
+        else if (!lecturerType.isPartTime) {
+            return "Штатный"
+        }
+        else if (lecturerType.isPartTime && lecturerType.isExternal){
+            return "Внешний совместитель"
+        }
+        else return "Внутренний совместитель"
+    }
+}
 
 data class LecturerTemplate(
     val id: UUID?,
