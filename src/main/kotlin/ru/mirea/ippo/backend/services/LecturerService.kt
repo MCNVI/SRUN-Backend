@@ -41,7 +41,7 @@ class LecturerService(
         return emptyList()
     }
 
-    fun createIndividualPlan(id: UUID) {
+    fun createIndividualPlan(id: UUID): File {
         val lecturerInfo = find(id)
         val lecturerLoadParts = distributedLoadRepository.findAllByLecturerId(id).map { it.toModel() }
         val lecturerLoad = loadRepository.findAllByIdIn(lecturerLoadParts.map { it.loadUnitId }).map { it.toModel() }
@@ -75,7 +75,6 @@ class LecturerService(
                 it.value.find { it.hoursType.equals("COURSE_PROJECT") }?.loadUnitPartDistributedParts?.find { it.lecturer?.id == id }?.loadPart
             )
         }
-        println(lecturerLoadUnitsAutumn.joinToString("\n"))
         val fileName = "${lecturerInfo.getFio()} (${lecturerInfo.lecturerRate.stripTrailingZeros()}ст).xlsx"
         val fileOutputStream = FileOutputStream(fileName)
         val template = File("ExcelTemplateIP.xlsx")
@@ -90,6 +89,8 @@ class LecturerService(
         JxlsHelper.getInstance().processTemplate(templateStream, fileOutputStream, jxlsContext)
         templateStream.close()
         fileOutputStream.close()
+        val indPlan = File("${lecturerInfo.getFio()} (${lecturerInfo.lecturerRate.stripTrailingZeros()}ст).xlsx")
+        return indPlan
     }
 
     fun createOrUpdate(lecturerTemplate: LecturerTemplate): Lecturer {

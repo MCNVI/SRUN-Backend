@@ -16,9 +16,17 @@ data class LoadUnit (
     val loadUnitPartDistributedParts: List<LoadUnitDistributedPart>
 ) {
     fun toKey() = LoadUnitSubjectKey(curriculumId,subject)
+    fun toKeyWithWithCourseAndSemester() = LoadUnitSubjectKeyWithCourseAndSemester(curriculumId,subject,course,semester)
 }
 
 data class LoadUnitSubjectKey(
     val curriculumId: UUID,
     val subject: String
+)
+
+data class LoadUnitSubjectKeyWithCourseAndSemester(
+    val curriculumId: UUID,
+    val subject: String,
+    val course: Int,
+    val semester: Int
 )
