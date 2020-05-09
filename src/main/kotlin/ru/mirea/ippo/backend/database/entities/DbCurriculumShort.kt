@@ -25,7 +25,7 @@ data class DbCurriculumShort(
         fun fromTemplate(curriculumShortTemplate: CurriculumShort): DbCurriculumShort = DbCurriculumShort(
             curriculumShortTemplate.id ?: UUID.randomUUID(),
             curriculumShortTemplate.fieldOfStudy,
-            curriculumShortTemplate.educationalProfile,
+            curriculumShortTemplate.profile,
             curriculumShortTemplate.startYear
         )
     }

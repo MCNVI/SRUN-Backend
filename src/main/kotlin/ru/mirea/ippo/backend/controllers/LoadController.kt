@@ -5,9 +5,12 @@ import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import ru.mirea.ippo.backend.models.LoadUnit
 import ru.mirea.ippo.backend.models.LoadUnitDistributedPart
+import ru.mirea.ippo.backend.repositories.UserRepository
 import ru.mirea.ippo.backend.services.LoadService
 import java.io.FileInputStream
 import java.math.BigDecimal
@@ -15,21 +18,28 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 @RestController
+@Secured("ROLE_DEPARTMENT_HEAD")
 @RequestMapping("load")
 @CrossOrigin
-class LoadController(val loadService: LoadService) {
+class LoadController(val loadService: LoadService, val userRepository: UserRepository) {
 
     @GetMapping
-    fun getAll(): List<LoadUnit> = loadService.findAll()
-
-    @GetMapping("{id}/parts")
-    fun getLoadUnitDistributedParts(@PathVariable id: UUID): List<LoadUnitDistributedPart> = loadService.findDistributedParts(id)
+    fun getAll(@AuthenticationPrincipal username: String): List<LoadUnit> {
+        val user = userRepository.findByUsername(username) ?: throw Exception()
+        return loadService.findAll(user.department)
+    }
 
     @GetMapping("{id}")
     fun getLoadUnitById(@PathVariable id: UUID): LoadUnit = loadService.findById(id)
 
     @DeleteMapping("{id}")
     fun deleteLoadUnit(@PathVariable id: UUID) = loadService.deleteLoadUnit(id)
+
+    @GetMapping("{id}/parts")
+    fun getLoadUnitDistributedParts(@PathVariable id: UUID): List<LoadUnitDistributedPart> {
+        return loadService.findDistributedParts(id)
+    }
+
 
     @DeleteMapping("{id}/{partId}")
     fun deleteLoadUnitDistributedPart(@PathVariable id: UUID, @PathVariable partId: UUID) = loadService.deleteLoadUnitDistributedPart(id, partId)

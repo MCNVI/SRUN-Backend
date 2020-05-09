@@ -1,6 +1,8 @@
 package ru.mirea.ippo.backend.database.entities
 
 import ru.mirea.ippo.backend.models.Lecturer
+import ru.mirea.ippo.backend.models.LecturerAcademicRank
+import ru.mirea.ippo.backend.models.LecturerDegree
 import ru.mirea.ippo.backend.models.LecturerTemplate
 import java.math.BigDecimal
 import java.time.Instant
@@ -16,6 +18,8 @@ data class DbLecturer (
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="lecturerTypeId",referencedColumnName = "id",insertable = false, updatable = false)
     val lecturerType: DbLecturerType?,
+    val academicRank: String?,
+    val degree: String?,
     val name: String,
     val middleName: String,
     val lastName: String,
@@ -24,11 +28,14 @@ data class DbLecturer (
     val lecturerMaxLoadForRate: BigDecimal,
     val employmentStartDate: Instant,
     val employmentFinishDate: Instant,
-    val monthAmount: BigDecimal
+    val monthAmount: BigDecimal,
+    val department: Int
 ) {
     fun toModel(): Lecturer = Lecturer(
         id,
         lecturerType?.toModel(),
+        LecturerAcademicRank(academicRank),
+        LecturerDegree(degree),
         name,
         middleName,
         lastName,
@@ -40,10 +47,12 @@ data class DbLecturer (
         monthAmount
     )
     companion object{
-        fun fromTemplate(lecturer: LecturerTemplate, lecturerLoadForRate: BigDecimal, lecturerMaxLoadForRate: BigDecimal) = DbLecturer(
+        fun fromTemplate(lecturer: LecturerTemplate, lecturerLoadForRate: BigDecimal, lecturerMaxLoadForRate: BigDecimal, department: Int) = DbLecturer(
             lecturer.id ?: UUID.randomUUID(),
             lecturer.lecturerTypeId,
             null,
+            lecturer.academicRank?.academicRank,
+            lecturer.degree?.degree,
             lecturer.name,
             lecturer.middleName,
             lecturer.lastName,
@@ -52,7 +61,8 @@ data class DbLecturer (
             lecturerMaxLoadForRate,
             lecturer.employmentStartDate,
             lecturer.employmentFinishDate,
-            lecturer.monthAmount
+            lecturer.monthAmount,
+            department
         )
     }
 }

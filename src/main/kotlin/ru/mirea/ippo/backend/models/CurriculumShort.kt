@@ -5,6 +5,6 @@ import java.util.*
 data class CurriculumShort (
     val id: UUID?,
     val fieldOfStudy: String,
-    val educationalProfile: String,
+    val profile: String,
     val startYear: Int
 )

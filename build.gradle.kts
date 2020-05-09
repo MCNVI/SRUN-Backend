@@ -32,10 +32,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-    //implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.vladmihalcea:hibernate-types-52:2.9.9")
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:6.1.4")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -47,6 +48,8 @@ dependencies {
     compile("org.apache.poi:poi-ooxml:4.1.2")
     compile("org.jxls:jxls:2.8.1")
     compile("org.jxls:jxls-poi:2.8.1")
+    compile("com.auth0:java-jwt:3.10.3")
+
 
     testCompile("org.jetbrains.kotlin:kotlin-test")
     testCompile("org.jetbrains.kotlin:kotlin-test-junit")

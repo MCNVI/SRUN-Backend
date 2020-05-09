@@ -1,19 +1,21 @@
 package ru.mirea.ippo.backend.services
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import ru.mirea.ippo.backend.database.entities.DbCurriculumShort
 import ru.mirea.ippo.backend.database.entities.DbCurriculumUnit
+import ru.mirea.ippo.backend.database.entities.DbUser
+import ru.mirea.ippo.backend.errorhandling.ObjectNotFoundException
 import ru.mirea.ippo.backend.errorhandling.ValidationException
-import ru.mirea.ippo.backend.models.Curriculum
-import ru.mirea.ippo.backend.models.CurriculumShort
-import ru.mirea.ippo.backend.models.CurriculumSubject
-import ru.mirea.ippo.backend.models.CurriculumUnit
+import ru.mirea.ippo.backend.models.*
 import ru.mirea.ippo.backend.repositories.CurriculumRepository
 import ru.mirea.ippo.backend.repositories.CurriculumShortRepository
+import ru.mirea.ippo.backend.repositories.UserRepository
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+import javax.annotation.PostConstruct
 
 @Service
 class CurriculumService(
@@ -63,6 +65,8 @@ class CurriculumService(
         for (row in planSheet) {
             if (row.getCell(0).stringCellValue.equals("+") && row.getCell(row.lastCellNum.toInt() - 3).stringCellValue.isNotEmpty()) {
                 val subject = row.getCell(2).stringCellValue
+                val department = row.getCell(79).stringCellValue
+                println(department)
                 for (cell in row) {
                     if (cell.stringCellValue.isNotEmpty() && planSheet.getRow(2).getCell(cell.columnIndex).stringCellValue.equals(
                             "Лек"
@@ -81,10 +85,11 @@ class CurriculumService(
                             subject,
                             "LECTURE",
                             cell.stringCellValue.toBigDecimal(),
-                            curriculum.id
+                            curriculum.id,
+                            department.toInt()
                         )
                         val curriculumUnit =
-                            curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                            curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                         curriculumRepository.refresh(curriculumUnit)
                     }
                     if (cell.stringCellValue.isNotEmpty() && planSheet.getRow(2).getCell(cell.columnIndex).stringCellValue.equals(
@@ -104,10 +109,11 @@ class CurriculumService(
                             subject,
                             "LABORATORY_WORK",
                             cell.stringCellValue.toBigDecimal(),
-                            curriculum.id
+                            curriculum.id,
+                            department.toInt()
                         )
                         val curriculumUnit =
-                            curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                            curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                         curriculumRepository.refresh(curriculumUnit)
                     }
                     if (cell.stringCellValue.isNotEmpty() && planSheet.getRow(2).getCell(cell.columnIndex).stringCellValue.equals(
@@ -127,10 +133,11 @@ class CurriculumService(
                             subject,
                             "PRACTICAL_CLASS",
                             cell.stringCellValue.toBigDecimal(),
-                            curriculum.id
+                            curriculum.id,
+                            department.toInt()
                         )
                         val curriculumUnit =
-                            curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                            curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                         curriculumRepository.refresh(curriculumUnit)
                     }
                     if (cell.stringCellValue.isNotEmpty() && planSheet.getRow(2).getCell(cell.columnIndex).stringCellValue.contains(
@@ -157,10 +164,11 @@ class CurriculumService(
                                 subject,
                                 "EXAM",
                                 null,
-                                curriculum.id
+                                curriculum.id,
+                                department.toInt()
                             )
                             val curriculumUnit =
-                                curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                                curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                             curriculumRepository.refresh(curriculumUnit)
                         }
                     }
@@ -188,10 +196,11 @@ class CurriculumService(
                                 subject,
                                 "TEST",
                                 null,
-                                curriculum.id
+                                curriculum.id,
+                                department.toInt()
                             )
                             val curriculumUnit =
-                                curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                                curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                             curriculumRepository.refresh(curriculumUnit)
                         }
                     }
@@ -219,10 +228,11 @@ class CurriculumService(
                                 subject,
                                 "COURSEWORK",
                                 null,
-                                curriculum.id
+                                curriculum.id,
+                                department.toInt()
                             )
                             val curriculumUnit =
-                                curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                                curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                             curriculumRepository.refresh(curriculumUnit)
                         }
                     }
@@ -250,10 +260,11 @@ class CurriculumService(
                                 subject,
                                 "COURSE_PROJECT",
                                 null,
-                                curriculum.id
+                                curriculum.id,
+                                department.toInt()
                             )
                             val curriculumUnit =
-                                curriculumRepository.save(DbCurriculumUnit.fromTemplate(curriculumUnitTemplate))
+                                curriculumRepository.save(DbCurriculumUnit.fromModel(curriculumUnitTemplate))
                             curriculumRepository.refresh(curriculumUnit)
                         }
                     }
@@ -267,4 +278,22 @@ class CurriculumService(
     fun delete(curriculumId: UUID) {
         curriculumShortRepository.deleteById(curriculumId)
     }
+
+    fun createOrUpdateUnit(curriculumId: UUID, curriculumUnit: CurriculumUnitTemplate): CurriculumUnit{
+        if (curriculumUnit.id != null){
+            curriculumRepository.deleteById(curriculumUnit.id)
+        }
+        val dbCurriculumUnit = DbCurriculumUnit.fromTemplate(curriculumUnit, curriculumId)
+        val curriculumUnit = curriculumRepository.save(dbCurriculumUnit)
+        curriculumRepository.refresh(curriculumUnit)
+        return curriculumRepository.findByIdOrNull(curriculumUnit.id)?.toModel() ?: throw ObjectNotFoundException(
+            "curriculumUnit",
+            curriculumUnit.id
+        )
+    }
+
+    fun deleteCurriculumUnit(curriculumId: UUID, curriculumUnitId: UUID){
+        curriculumRepository.deleteById(curriculumUnitId)
+    }
+
 }

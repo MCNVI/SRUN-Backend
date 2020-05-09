@@ -26,8 +26,8 @@ class LoadService(
     val lecturerRepository: LecturerRepository
 ) {
 
-    fun findAll(): List<LoadUnit> {
-        return loadRepository.findAll().map { it.toModel() }
+    fun findAll(department: Int): List<LoadUnit> {
+        return loadRepository.findByDepartment(department).map { it.toModel() }
     }
 
     fun findDistributedParts(id: UUID): List<LoadUnitDistributedPart> {

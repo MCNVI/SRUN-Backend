@@ -1,5 +1,6 @@
 package ru.mirea.ippo.backend.controllers
 
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import ru.mirea.ippo.backend.models.Group
 import ru.mirea.ippo.backend.models.Stream
@@ -7,6 +8,7 @@ import ru.mirea.ippo.backend.services.StudentService
 import java.util.*
 
 @RestController
+@Secured("ROLE_ADMIN")
 @RequestMapping("streams")
 @CrossOrigin
 class StreamsController(val studentService: StudentService) {

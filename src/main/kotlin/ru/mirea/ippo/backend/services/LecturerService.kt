@@ -10,7 +10,7 @@ import ru.mirea.ippo.backend.models.Lecturer
 import ru.mirea.ippo.backend.models.LecturerLoadUnit
 import ru.mirea.ippo.backend.models.LecturerTemplate
 import ru.mirea.ippo.backend.models.PrioritizedLecturer
-import ru.mirea.ippo.backend.repositories.DirectoryRepository
+import ru.mirea.ippo.backend.repositories.LecturerTypeRepository
 import ru.mirea.ippo.backend.repositories.DistributedLoadRepository
 import ru.mirea.ippo.backend.repositories.LecturerRepository
 import ru.mirea.ippo.backend.repositories.LoadRepository
@@ -23,7 +23,7 @@ import java.util.*
 @Service
 class LecturerService(
     val lecturerRepository: LecturerRepository,
-    val directoryRepository: DirectoryRepository,
+    val lecturerTypeRepository: LecturerTypeRepository,
     val loadRepository: LoadRepository,
     val distributedLoadRepository: DistributedLoadRepository
 ) {
@@ -31,7 +31,7 @@ class LecturerService(
     fun find(id: UUID): Lecturer =
         lecturerRepository.findByIdOrNull(id)?.toModel() ?: throw ObjectNotFoundException("Lecturer", id)
 
-    fun findAll(): List<Lecturer> = lecturerRepository.findAll().map { it.toModel() }
+    fun findAllByDepartment(depId: Int): List<Lecturer> = lecturerRepository.findAll().map { it.toModel() }
 
     fun getByRelevance(loadUnitId: UUID): List<PrioritizedLecturer> {
         val loadUnit = loadRepository.findByIdOrNull(loadUnitId)?.toModel() ?: throw ObjectNotFoundException(
@@ -93,14 +93,14 @@ class LecturerService(
         return indPlan
     }
 
-    fun createOrUpdate(lecturerTemplate: LecturerTemplate): Lecturer {
-        val lecturerType = directoryRepository.findByIdOrNull(lecturerTemplate.lecturerTypeId)
+    fun createOrUpdate(lecturerTemplate: LecturerTemplate, department: Int): Lecturer {
+        val lecturerType = lecturerTypeRepository.findByIdOrNull(lecturerTemplate.lecturerTypeId)
             ?: throw ObjectNotFoundException("LecturerType", lecturerTemplate.lecturerTypeId)
         val lecturerLoadForRate =
             BigDecimal.valueOf(lecturerTemplate.monthAmount.toDouble() / 10 * lecturerTemplate.lecturerRate.toDouble() * lecturerType.studyLoad)
         val lecturerMaxLoadForRate =
             BigDecimal.valueOf(lecturerTemplate.monthAmount.toDouble() / 10 * lecturerTemplate.lecturerRate.toDouble() * 900)
-        val dbLecturer = DbLecturer.fromTemplate(lecturerTemplate, lecturerLoadForRate, lecturerMaxLoadForRate)
+        val dbLecturer = DbLecturer.fromTemplate(lecturerTemplate, lecturerLoadForRate, lecturerMaxLoadForRate, department)
 
         val lecturer = lecturerRepository.save(dbLecturer)
         lecturerRepository.refresh(lecturer)

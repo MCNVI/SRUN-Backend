@@ -1,6 +1,7 @@
 package ru.mirea.ippo.backend.database.entities
 
 import ru.mirea.ippo.backend.models.CurriculumUnit
+import ru.mirea.ippo.backend.models.CurriculumUnitTemplate
 import java.math.BigDecimal
 import java.util.*
 import javax.persistence.Entity
@@ -17,7 +18,8 @@ data class DbCurriculumUnit(
     val subject: String,
     val loadType: String,
     val load: BigDecimal?,
-    val curriculumId: UUID
+    val curriculumId: UUID,
+    val department: Int
 ) {
     fun toModel(): CurriculumUnit = CurriculumUnit(
         id,
@@ -26,17 +28,29 @@ data class DbCurriculumUnit(
         subject,
         loadType,
         load,
-        curriculumId
+        curriculumId,
+        department
     )
     companion object{
-        fun fromTemplate(curriculumUnit: CurriculumUnit) = DbCurriculumUnit(
+        fun fromModel(curriculumUnit: CurriculumUnit) = DbCurriculumUnit(
             curriculumUnit.id ?: UUID.randomUUID(),
             curriculumUnit.course,
             curriculumUnit.semester,
             curriculumUnit.subject,
             curriculumUnit.loadType,
             curriculumUnit.load,
-            curriculumUnit.curriculumId
+            curriculumUnit.curriculumId,
+            curriculumUnit.department
+        )
+        fun fromTemplate(curriculumUnit: CurriculumUnitTemplate, curriculumId: UUID) = DbCurriculumUnit(
+            curriculumUnit.id ?: UUID.randomUUID(),
+            curriculumUnit.course,
+            curriculumUnit.semester,
+            curriculumUnit.subject,
+            curriculumUnit.loadType,
+            curriculumUnit.load,
+            curriculumId,
+            curriculumUnit.department
         )
     }
 }

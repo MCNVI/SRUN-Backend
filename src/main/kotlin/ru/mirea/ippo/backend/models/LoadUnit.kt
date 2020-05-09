@@ -13,6 +13,7 @@ data class LoadUnit (
     val hours: BigDecimal,
     val hoursType: String,
     val curriculumId: UUID,
+    val department: Int,
     val loadUnitPartDistributedParts: List<LoadUnitDistributedPart>
 ) {
     fun toKey() = LoadUnitSubjectKey(curriculumId,subject)

@@ -13,6 +13,17 @@ begin
 end;
 $$;
 
+create table ippo.user
+(
+    id       uuid    not null,
+    username varchar not null,
+    password varchar not null,
+    roles    varchar[] not null,
+    department integer not null,
+
+    constraint pk_user primary key (id)
+);
+
 create table ippo.lecturer_type
 (
     id           uuid    not null,
@@ -28,6 +39,8 @@ create table ippo.staffing_table
 (
     id                         uuid           not null,
     lecturer_type_id           uuid           not null,
+    degree                     varchar,
+    academic_rank              varchar,
     name                       varchar        not null,
     middle_name                varchar        not null,
     last_name                  varchar        not null,
@@ -37,6 +50,7 @@ create table ippo.staffing_table
     employment_finish_date     timestamptz    not null,
     lecturer_load_for_rate     decimal(19, 5) not null,
     lecturer_max_load_for_rate decimal(19, 5) not null default 900,
+    department                 integer        not null,
     constraint pk_staffing_table primary key (id),
     constraint fk_staffing_table_lecturer_type
         foreign key (lecturer_type_id)
@@ -73,6 +87,8 @@ create table ippo.curriculum_unit
     load          decimal(19, 5),
     load_type     varchar not null,
     curriculum_id uuid    not null,
+    department    integer not null,
+
 
     constraint pk_curriculum_unit primary key (id),
     constraint fk_curriculum_load_type
@@ -138,6 +154,7 @@ create table ippo.load
     hours_type    varchar        not null,
     hours         decimal(19, 5) not null,
     curriculum_id uuid           not null,
+    department    integer        not null,
 
     constraint pk_hours primary key (id)
 );
@@ -156,9 +173,10 @@ declare
     type_hours_tmp      decimal(19, 5);
     students_number_tmp integer;
     curriculum_t        uuid;
+    department_t        integer;
 begin
     if TG_OP = 'INSERT' then
-        for course_t,semester_t,subject_t,load_t,load_type_t,curriculum_t in select course, semester, subject, load, load_type, curriculum_id
+        for course_t,semester_t,subject_t,load_t,load_type_t,curriculum_t,department_t in select course, semester, subject, load, load_type, curriculum_id, department
                                                                              from ippo.curriculum_unit
                                                                              where curriculum_id = new.curriculum_id
                                                                                and course = new.course
@@ -170,13 +188,13 @@ begin
                 if division_type_t = 'BY_GROUP' then
                     insert into ippo.load
                     values (uuid_generate_v4(), course_t, semester_t, subject_t, new.code, null, load_type_t, load_t,
-                            curriculum_t);
+                            curriculum_t,department_t);
                 end if;
                 if division_type_t = 'BY_STUDENT' then
                     select students_number into students_number_tmp from ippo.group where code = new.code;
                     insert into ippo.load
                     values (uuid_generate_v4(), course_t, semester_t, subject_t, new.code, null, load_type_t,
-                            students_number_tmp * type_hours_tmp, curriculum_t);
+                            students_number_tmp * type_hours_tmp, curriculum_t,department_t);
                 end if;
             end loop;
         return new;
@@ -221,9 +239,10 @@ declare
     type_hours_tmp  decimal(19, 5);
     curriculum_t    uuid;
     semester_t      integer;
+    department_t    integer;
 begin
     if TG_OP = 'INSERT' then
-        for course_t,semester_t,subject_t,load_t,load_type_t, curriculum_t in select course, semester, subject, load, load_type, curriculum_id
+        for course_t,semester_t,subject_t,load_t,load_type_t, curriculum_t,department_t in select course, semester, subject, load, load_type, curriculum_id,department
                                                                               from curriculum_unit
                                                                               where curriculum_id = new.curriculum_id
                                                                                 and subject = new.subject
@@ -236,7 +255,7 @@ begin
                 if division_type_t = 'BY_STREAM' then
                     insert into ippo.load
                     values (uuid_generate_v4(), course_t, semester_t, subject_t, null, new.id, load_type_t, load_t,
-                            curriculum_t);
+                            curriculum_t,department_t);
                 end if;
             end loop;
         return new;
@@ -312,3 +331,28 @@ INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
 VALUES ('474be1bf-b35d-424e-b841-97556968775e', 'Доцент', 810, true, false);
 INSERT INTO ippo.lecturer_type (id, type, study_load, is_part_time, is_external)
 VALUES ('474be1bf-b35d-424e-b841-97557968775e', 'Профессор', 720, true, false);
+
+create table ippo.lecturer_degree
+(
+    degree varchar not null,
+    constraint pk_lecturer_degree primary key (degree)
+);
+
+create table ippo.lecturer_academic_rank
+(
+    academic_rank varchar not null,
+    constraint pk_lecturer_academic_rank primary key (academic_rank)
+);
+
+insert into ippo.lecturer_degree (degree)
+values ('Доктор наук');
+insert into ippo.lecturer_degree (degree)
+values ('Кандидат наук');
+
+insert into ippo.lecturer_academic_rank (academic_rank)
+values ('Доцент');
+insert into ippo.lecturer_academic_rank (academic_rank)
+values ('Профессор');
+
+
+

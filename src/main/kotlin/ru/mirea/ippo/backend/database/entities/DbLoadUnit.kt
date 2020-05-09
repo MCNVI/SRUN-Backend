@@ -22,6 +22,7 @@ data class DbLoadUnit (
     val hours: BigDecimal,
     val hoursType: String,
     val curriculumId: UUID,
+    val department: Int,
     @OneToMany(mappedBy = "loadUnit")
     val distributedParts: List<DbLoadUnitDistributedPart>
 ) {
@@ -35,6 +36,7 @@ data class DbLoadUnit (
         hours,
         hoursType,
         curriculumId,
+        department,
         distributedParts.map { it.toModel() }
     )
 }

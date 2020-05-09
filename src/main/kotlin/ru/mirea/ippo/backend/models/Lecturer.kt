@@ -7,6 +7,8 @@ import java.util.*
 data class Lecturer(
     val id: UUID,
     val lecturerType: LecturerType?,
+    val academicRank: LecturerAcademicRank?,
+    val degree: LecturerDegree?,
     val name: String,
     val middleName: String,
     val lastName: String,
@@ -38,6 +40,8 @@ data class LecturerTemplate(
     val id: UUID?,
     val lecturerTypeId: UUID,
     val lecturerType: LecturerTypeTemplate?,
+    val academicRank: LecturerAcademicRank?,
+    val degree: LecturerDegree?,
     val name: String,
     val middleName: String,
     val lastName: String,

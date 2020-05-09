@@ -1,0 +1,11 @@
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb1', 'ИСБО-01-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb1', 'ИСБО-02-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb1', 'ИСБО-03-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb1', 'ИСБО-04-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb2', 'ИСБО-01-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb2', 'ИСБО-02-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb2', 'ИСБО-03-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb2', 'ИСБО-04-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb3', 'ИСБО-01-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb4', 'ИСБО-04-20');
+insert into ippo.group_stream (stream_id, group_code) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb4', 'ИСБО-02-20');

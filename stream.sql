@@ -1,0 +1,4 @@
+insert into ippo.stream (id, type, subject, course, curriculum_id) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb1', 'LECTURE', 'Введение в профессиональную деятельность', 1, '11da02f5-80cb-44d3-b222-ce31b9b2eebf');
+insert into ippo.stream (id, type, subject, course, curriculum_id) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb2', 'LECTURE', 'Информатика', 1, '11da02f5-80cb-44d3-b222-ce31b9b2eebf');
+insert into ippo.stream (id, type, subject, course, curriculum_id) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb3', 'LECTURE', 'Процедурное программирование', 1, '11da02f5-80cb-44d3-b222-ce31b9b2eebf');
+insert into ippo.stream (id, type, subject, course, curriculum_id) values ('11da02f5-80cb-44d3-b222-ce31b9b2eeb4', 'LECTURE', 'Линейная алгебра и аналитическая геометрия', 1, '11da02f5-80cb-44d3-b222-ce31b9b2eebf');
