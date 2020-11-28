@@ -2,6 +2,7 @@ package ru.mirea.ippo.backend.services
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.mirea.ippo.backend.database.entities.DbGroup
 import ru.mirea.ippo.backend.database.entities.DbGroupStream
 import ru.mirea.ippo.backend.database.entities.DbStream
@@ -61,9 +62,9 @@ class StudentService(
         return streamRepository.findByIdOrNull(streamId)?.toModel() ?: throw ObjectNotFoundException("Stream", streamId)
     }
 
-    fun removeGroupFromStream(streamId: UUID, group: Group): Stream {
-        groupStreamRepository.deleteDbGroupStreamByStreamIdAndGroupCode(streamId, group.code)
-        return streamRepository.findByIdOrNull(streamId)?.toModel() ?: throw ObjectNotFoundException("Stream", streamId)
+    @Transactional
+    fun removeGroupFromStream(streamId: UUID, group: Group) {
+        groupStreamRepository.deleteByStreamIdAndGroupCode(streamId, group.code)
     }
 
     fun getAvailableGroups(streamId: UUID): List<Group> {

@@ -29,6 +29,6 @@ class StreamsController(val studentService: StudentService) {
     fun addGroupToStream(@PathVariable id: UUID, @RequestBody group: Group) : Stream = studentService.addGroupToStream(id, group)
 
     @PutMapping("{id}/removeGroup")
-    fun removeGroupFromStream(@PathVariable id: UUID, @RequestBody group: Group) : Stream = studentService.removeGroupFromStream(id, group)
+    fun removeGroupFromStream(@PathVariable id: UUID, @RequestBody group: Group) = studentService.removeGroupFromStream(id, group)
 
 }

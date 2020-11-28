@@ -8,7 +8,7 @@ import javax.transaction.Transactional
 
 class CustomJpaRepositoryImpl<T, ID : Serializable> : SimpleJpaRepository<T, ID>, CustomJpaRepository<T, ID> {
 
-    final val entityManager: EntityManager
+    private final val entityManager: EntityManager
 
     constructor(entityInformation: JpaEntityInformation<T, *>, entityManager: EntityManager) : super(
         entityInformation,

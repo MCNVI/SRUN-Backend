@@ -24,7 +24,7 @@ data class Lecturer(
     }
     fun getForm(): String{
         if (lecturerType == null){
-            return "Неизвестная формы устройства"
+            return "Неизвестная форма устройства"
         }
         else if (!lecturerType.isPartTime) {
             return "Штатный"

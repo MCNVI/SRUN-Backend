@@ -1,2 +1,2 @@
-rootProject.name = "SraneHuychne_backend"
+rootProject.name = "Svetlana_backend"
 

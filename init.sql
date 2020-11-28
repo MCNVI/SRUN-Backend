@@ -354,5 +354,7 @@ values ('Доцент');
 insert into ippo.lecturer_academic_rank (academic_rank)
 values ('Профессор');
 
+insert into ippo.user (id, username, password, roles, department) values ('95e0176e-f6a6-4346-ae7d-9033bfaeef1b', 'admin', '$2y$10$/EyYgJI2InYO2lKWmEekUOORubJPPL751vLQMseqHV9y0O0zHlFuS', '{ADMIN}', 7);
+insert into ippo.user (id, username, password, roles, department) values ('95e0176e-f6a6-4346-ae7d-9033bfaeef2b', 'head', '$2y$10$/EyYgJI2InYO2lKWmEekUOORubJPPL751vLQMseqHV9y0O0zHlFuS', '{DEPARTMENT_HEAD}', 7);
 
 

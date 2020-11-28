@@ -66,7 +66,6 @@ class CurriculumService(
             if (row.getCell(0).stringCellValue.equals("+") && row.getCell(row.lastCellNum.toInt() - 3).stringCellValue.isNotEmpty()) {
                 val subject = row.getCell(2).stringCellValue
                 val department = row.getCell(79).stringCellValue
-                println(department)
                 for (cell in row) {
                     if (cell.stringCellValue.isNotEmpty() && planSheet.getRow(2).getCell(cell.columnIndex).stringCellValue.equals(
                             "Лек"

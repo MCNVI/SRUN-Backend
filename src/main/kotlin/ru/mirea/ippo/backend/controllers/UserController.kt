@@ -2,25 +2,16 @@ package ru.mirea.ippo.backend.controllers
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.util.JSONPObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.*
-import org.springframework.http.codec.HttpMessageDecoder
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.web.bind.annotation.*
 import ru.mirea.ippo.backend.security.SecurityConstants
-import springfox.documentation.spring.web.json.Json
-import java.nio.charset.StandardCharsets
 import java.util.*
-import javax.servlet.http.HttpServletResponse
 
 @RestController
 @CrossOrigin

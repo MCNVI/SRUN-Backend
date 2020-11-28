@@ -88,8 +88,7 @@ class LoadService(
         JxlsHelper.getInstance().processTemplate(templateStream, fileOutputStream, jxlsContext)
         templateStream.close()
         fileOutputStream.close()
-        val form13 = File("Форма 13.xlsx")
-        return form13
+        return File("Форма 13.xlsx")
     }
 
 }

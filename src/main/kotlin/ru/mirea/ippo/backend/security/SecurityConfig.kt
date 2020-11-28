@@ -71,6 +71,7 @@ class SecurityConfig(val objectMapper: ObjectMapper) : WebSecurityConfigurerAdap
                 "/api/swagger*/**",
                 "/api/webjars/**").permitAll()
             .antMatchers("/api/login").permitAll()
+            .antMatchers("/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
@@ -97,11 +98,4 @@ class SecurityConfig(val objectMapper: ObjectMapper) : WebSecurityConfigurerAdap
         builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder())
     }
 
-//    @Bean
-//    fun authenticationProvider(): DaoAuthenticationProvider? {
-//        val provider = DaoAuthenticationProvider()
-//        provider.setPasswordEncoder(passwordEncoder())
-//        provider.setUserDetailsService(userDetailsService)
-//        return provider
-//    }
 }

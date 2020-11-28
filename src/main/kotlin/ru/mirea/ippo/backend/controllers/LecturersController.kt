@@ -19,12 +19,11 @@ import java.util.*
 
 
 @RestController
-
+@Secured("ROLE_DEPARTMENT_HEAD")
 @RequestMapping("lecturers")
 @CrossOrigin
 class LecturersController(val lecturerService: LecturerService, val userRepository: UserRepository) {
 
-    @Secured("ROLE_DEPARTMENT_HEAD")
     @PostMapping
     fun createOrUpdateLecturer(@RequestBody lecturerTemplate: LecturerTemplate, @AuthenticationPrincipal username: String): Lecturer {
         val user = userRepository.findByUsername(username) ?: throw Exception()
@@ -32,7 +31,6 @@ class LecturersController(val lecturerService: LecturerService, val userReposito
         return lecturerService.find(lecturer.id)
     }
 
-    @Secured("ROLE_DEPARTMENT_HEAD")
     @GetMapping
     fun getLecturers(@AuthenticationPrincipal username: String): List<Lecturer> {
         val user = userRepository.findByUsername(username) ?: throw Exception()
@@ -40,22 +38,18 @@ class LecturersController(val lecturerService: LecturerService, val userReposito
     }
 
     //TODO: findByRelevance
-    @Secured("ROLE_DEPARTMENT_HEAD")
     @GetMapping("relevance")
     fun getLecturersByRelevance(@RequestParam loadUnitId: UUID, @AuthenticationPrincipal username: String): List<PrioritizedLecturer> {
         lecturerService.getByRelevance(loadUnitId)
         return emptyList()
     }
 
-    @Secured("ROLE_DEPARTMENT_HEAD")
     @GetMapping("{id}")
     fun getLecturerById(@PathVariable id: UUID): Lecturer = lecturerService.find(id)
 
-    @Secured("ROLE_DEPARTMENT_HEAD")
     @DeleteMapping("{id}")
     fun deleteLecturer(@PathVariable id: UUID) = lecturerService.delete(id)
 
-    @Secured("ROLE_DEPARTMENT_HEAD")
     @GetMapping("{id}/individualPlan")
     fun getLecturerIndividualPlan(@PathVariable id: UUID): ResponseEntity<InputStreamResource> {
         val individualPlan = lecturerService.createIndividualPlan(id)
